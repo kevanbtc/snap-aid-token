@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import db from '../db.js';
 import { redeem } from '../xrpl/issuer.js';
+import { getClient } from '../xrpl/client.js';
 
 const router = Router();
 
@@ -28,3 +29,16 @@ router.post('/redeem/record', (req: Request, res: Response) => {
 });
 
 export default router;
+// Submit a signed transaction blob (e.g., merchant-signed redemption)
+router.post('/redeem/submit', async (req: Request, res: Response) => {
+  try {
+    const { tx_blob } = req.body as { tx_blob: string };
+    if (!tx_blob) return res.status(400).json({ error: 'tx_blob required' });
+    const client = await getClient();
+    const result = await client.submitAndWait(tx_blob);
+    const hash = (result as any).result?.tx_json?.hash || (result as any).result?.hash || null;
+    res.json({ ok: true, result, hash });
+  } catch (e: any) {
+    res.status(400).json({ error: e.message });
+  }
+});

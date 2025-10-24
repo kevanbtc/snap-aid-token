@@ -9,6 +9,8 @@ import Merchant from './views/Merchant';
 import Admin from './views/Admin';
 import SnapData from './views/SnapData';
 import SnapStatus from './views/SnapStatus';
+import Concept from './views/Concept';
+import BackOffice from './views/BackOffice';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -17,7 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<App />}> 
           <Route index element={<div className="page">
             <h2>SNAP Aid Token</h2>
-            <p>Select a portal:</p>
+            <p>Select a portal or explore the concept:</p>
             <ul>
               <li><Link to="/donor">Donor</Link></li>
               <li><Link to="/family">Family</Link></li>
@@ -25,6 +27,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <li><Link to="/admin">Admin</Link></li>
               <li><Link to="/data">SNAP by State</Link></li>
               <li><Link to="/status">State Status</Link></li>
+              <li><Link to="/concept">Educational Concept</Link></li>
+              <li><Link to="/backoffice">Back Office</Link></li>
             </ul>
             </div>} />
           <Route path="/donor" element={<Donor />} />
@@ -33,6 +37,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Route path="/admin" element={<Admin />} />
             <Route path="/data" element={<SnapData />} />
             <Route path="/status" element={<SnapStatus />} />
+            <Route path="/concept" element={<Concept />} />
+            <Route path="/backoffice" element={<BackOffice />} />
         </Route>
       </Routes>
     </BrowserRouter>

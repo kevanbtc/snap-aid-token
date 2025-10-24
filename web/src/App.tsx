@@ -6,6 +6,8 @@ export default function App() {
       <header className="header">
         <Link to="/">SNAP Aid Token</Link>
         <nav className="nav">
+          <Link to="/concept" className="ml-8">Concept</Link>
+          <Link to="/backoffice" className="ml-8">Back Office</Link>
           <details>
             <summary>SNAP ▾</summary>
             <ul className="menu">

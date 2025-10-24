@@ -27,3 +27,26 @@
 .nav summary { cursor: pointer; list-style: none; }
 .nav .menu { position: absolute; top: 1.8rem; left: 0; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
 .nav .menu li { list-style: none; margin: 4px 0; }
+
+/* Concept page styles */
+.hero {
+  padding: 24px 0;
+}
+.cta { margin-top: 12px; }
+.btn { display: inline-block; padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; margin-right: 8px; text-decoration: none; color: #222; }
+.btn-primary { background: #0ea5e9; border-color: #0ea5e9; color: #fff; }
+.btn-secondary { background: #fff; }
+.grid { display: grid; gap: 12px; }
+.grid.two { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid.three { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.grid.four { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.card { border: 1px solid #eee; border-radius: 10px; padding: 12px; background: #fff; }
+.pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #f0f9ff; color: #0369a1; font-size: 0.8rem; margin-bottom: 4px; }
+.stat-grid { display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0,1fr)); }
+.stat { border: 1px solid #eee; border-radius: 10px; padding: 12px; background: #fff; }
+.stat-num { font-size: 1.6rem; font-weight: 700; }
+.stat-label { color: #111; }
+.stat-sub { color: #555; font-size: 0.9rem; }
+
+/* QR image sizing */
+.qr180 { width: 180px; height: 180px; }

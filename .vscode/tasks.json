@@ -5,41 +5,61 @@
     {
       "label": "Backend: dev server",
       "type": "shell",
-      "command": "npm",
-      "args": ["run", "dev", "--prefix", "C:/snap-aid-token/server"],
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "cd C:\\snap-aid-token\\server; npm run dev"
+      ],
       "isBackground": true,
-      "problemMatcher": []
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+        "label": "Dev: both servers",
+        "type": "shell",
+        "command": "powershell",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-Command",
+          "Start-Job { cd C:\\snap-aid-token\\server; npm run dev }; Start-Job { cd C:\\snap-aid-token\\web; npm run dev }; Receive-Job -Id 1 -Wait; Receive-Job -Id 2 -Wait"
+        ],
+        "isBackground": true,
+        "problemMatcher": [],
+      "group": "build"
     },
     {
       "label": "Frontend: dev server",
       "type": "shell",
-      "command": "npm",
-      "args": ["run", "dev", "--prefix", "C:/snap-aid-token/web"],
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "cd C:\\snap-aid-token\\web; npm run dev"
+      ],
       "isBackground": true,
-      "problemMatcher": []
+      "problemMatcher": [],
+      "group": "build"
     },
     {
       "label": "Frontend: build",
       "type": "shell",
-      "command": "npm",
-      "args": ["run", "build", "--prefix", "C:/snap-aid-token/web"]
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "cd C:\\snap-aid-token\\web; npm run -s build"
+      ],
+      "problemMatcher": [],
+      "group": "build"
     }
   ]
-}{
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Run backend dev server",
-			"type": "shell",
-			"command": "powershell",
-			"args": [
-				"-NoProfile",
-				"-Command",
-				"cd C:\\snap-aid-token\\server; npm run dev"
-			],
-			"isBackground": true,
-			"problemMatcher": [],
-			"group": "build"
-		}
-	]
 }
