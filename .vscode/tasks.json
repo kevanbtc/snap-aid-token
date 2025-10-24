@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json.schemastore.org/vscode/tasks.json",
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Backend: dev server",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev", "--prefix", "C:/snap-aid-token/server"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend: dev server",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev", "--prefix", "C:/snap-aid-token/web"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Frontend: build",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build", "--prefix", "C:/snap-aid-token/web"]
+    }
+  ]
+}{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run backend dev server",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"cd C:\\snap-aid-token\\server; npm run dev"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

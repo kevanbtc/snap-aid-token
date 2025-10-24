@@ -1,0 +1,29 @@
+/* Global utility classes to reduce inline-styles */
+.page {
+  padding: 16px;
+}
+.section {
+  margin-top: 16px;
+}
+.center {
+  text-align: center;
+}
+.small {
+  font-size: 0.9rem;
+}
+
+/* Layout helpers */
+.header {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+.right { text-align: right; }
+.ml-8 { margin-left: 8px; }
+.prewrap { white-space: pre-wrap; }
+
+/* Simple dropdown nav */
+.nav { display: inline-block; margin-left: 16px; position: relative; }
+.nav details { display: inline-block; }
+.nav summary { cursor: pointer; list-style: none; }
+.nav .menu { position: absolute; top: 1.8rem; left: 0; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.nav .menu li { list-style: none; margin: 4px 0; }

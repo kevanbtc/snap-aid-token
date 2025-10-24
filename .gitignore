@@ -1,0 +1,12 @@
+# Node
+node_modules/
+*.log
+
+# Build
+server/dist/
+web/dist/
+
+# Env
+.env
+server/.env
+web/.env
