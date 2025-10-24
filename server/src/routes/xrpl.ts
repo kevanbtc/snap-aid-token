@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { getIssuerSettings, setIssuerSettings, setIssuerSignerList, anchorLegalHash } from '../xrpl/governance.js';
+import { requireAdmin } from '../middleware/auth.js';
+import { getIssuerSettings, setIssuerSettings, setIssuerSignerList, anchorLegalHash, authorizeTrustline } from '../xrpl/governance.js';
 import { currencyCode, getIssuerWallet } from '../xrpl/issuer.js';
 import { hasTrustline, buildTrustSetTx } from '../xrpl/utils.js';
 
@@ -112,7 +113,7 @@ router.get('/issuer/settings', async (_req: Request, res: Response) => {
   }
 });
 
-router.post('/issuer/settings', async (req: Request, res: Response) => {
+router.post('/issuer/settings', requireAdmin, async (req: Request, res: Response) => {
   try {
     const { requireAuth, disallowXRP, defaultRipple, globalFreeze, transferRate, domain } = req.body || {};
     const result = await setIssuerSettings({ requireAuth, disallowXRP, defaultRipple, globalFreeze, transferRate, domain });
@@ -123,7 +124,7 @@ router.post('/issuer/settings', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/issuer/signerlist', async (req: Request, res: Response) => {
+router.post('/issuer/signerlist', requireAdmin, async (req: Request, res: Response) => {
   try {
     const { quorum, signers } = req.body || {};
     if (!quorum || !Array.isArray(signers) || signers.length === 0) {
@@ -140,7 +141,7 @@ router.post('/issuer/signerlist', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/anchor/legal-hash', async (req: Request, res: Response) => {
+router.post('/anchor/legal-hash', requireAdmin, async (req: Request, res: Response) => {
   try {
     const { hash, memoType } = req.body || {};
     if (!hash) return res.status(400).json({ error: 'hash is required' });
@@ -148,6 +149,25 @@ router.post('/anchor/legal-hash', async (req: Request, res: Response) => {
     res.json({ ok: true, result });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'anchor error';
+    res.status(500).json({ error: msg });
+  }
+});
+
+// Authorize a holder's trustline when RequireAuth is enabled.
+// Body: { account: string, currency?: string }
+router.post('/issuer/authorize-trustline', requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { account, currency } = req.body || {};
+    if (!account) return res.status(400).json({ error: 'account is required' });
+    const code = currency ? String(currency) : currencyCode();
+  const result = await authorizeTrustline(String(account), code);
+  const r = result as unknown as Record<string, unknown>;
+  const resObj = r['result'] as Record<string, unknown> | undefined;
+  const txj = resObj?.['tx_json'] as Record<string, unknown> | undefined;
+  const txHash = (txj?.['hash'] as string) ?? (resObj?.['hash'] as string) ?? null;
+    res.json({ ok: true, tx: txHash, result });
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'authorize trustline error';
     res.status(500).json({ error: msg });
   }
 });

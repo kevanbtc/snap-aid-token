@@ -1,129 +1,179 @@
-# SNAP Aid Token (XRPL)
+# Global Aid Token (GAT) — XRPL Gateway Pilot
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node](https://img.shields.io/badge/Node-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![XRPL Testnet](https://img.shields.io/badge/XRPL-Testnet-23292F?logo=ripple&logoColor=white)](https://xrpl.org/)
+[![Compliance‑Ready](https://img.shields.io/badge/Compliance-Ready-0E7C7B)](#compliance--governance)
+[![Windows](https://img.shields.io/badge/OS-Windows-0078D6?logo=windows&logoColor=white)](#quick-start-windows)
+[![License: MIT](https://img.shields.io/badge/License-MIT-000000.svg)](#license)
 
-An end-to-end prototype for an emergency food-aid token system on the XRP Ledger (XRPL) with a Node.js/Express TypeScript backend and a React (Vite) frontend.
+An end‑to‑end aid token pilot on the XRP Ledger (XRPL) with a TypeScript/Express backend and a React (Vite) frontend. Public label: Global Aid Token (GAT). The existing FSNAP name is retained as a program alias for pilots.
+
+---
 
 ## Table of Contents
 
-- Overview
-- Architecture
-- Features
-- Quick Start
-- Configuration
-- Run and Verify
-- API (selected)
-- Data and Reporting
-- Security Notes
-- Development
-- License
+1. [Overview](#overview)
+2. [Architecture](#architecture)
+3. [Key Features](#key-features)
+4. [Quick Start (Windows)](#quick-start-windows)
+5. [Environment](#environment)
+6. [Run and Verify](#run-and-verify)
+7. [API (selected)](#api-selected)
+8. [Compliance & Governance](#compliance--governance)
+9. [Back Office](#back-office)
+10. [Data & Reporting](#data--reporting)
+11. [Security & Privacy](#security--privacy)
+12. [Troubleshooting](#troubleshooting)
+13. [Docs](#docs)
+14. [License](#license)
+
+---
 
 ## Overview
 
-FSNAP is a demo token on XRPL Testnet designed to simulate emergency food benefits during disruptions. It supports issuance, distribution to families (trustline required), merchant redemption, and a transparent audit trail.
+GAT is a gateway‑grade aid instrument: issuers mint and distribute to verified recipients; merchants redeem for fiat. It uses XRPL IOUs with trustlines, issuer flags, and multisig. All flows are auditable.
+
+Terminology
+- Currency code: `GAT` (on‑ledger). FSNAP remains a UI alias for the current program.
+- Network: XRPL Testnet by default.
 
 ## Architecture
 
-- Backend: Node.js + TypeScript + Express + better-sqlite3; XRPL JS SDK on testnet
-- Frontend: React + Vite + TypeScript, React Router, Axios
-- Data: Embedded per-state SNAP participation (JSON/CSV) and a state status tracker
+- Backend: Express + TypeScript + better‑sqlite3; XRPL JS SDK
+- Frontend: React + Vite + TypeScript (React Router, Axios)
+- Data: Embedded per‑state participation data and status tracker
 
 ```text
-[React/Vite] ── Axios ──▶ [Express API] ──▶ [XRPL Testnet]
+[React/Vite] ── Axios ──▶ [Express API] ──▶ [XRPL]
                     ╰────▶ [SQLite Audit]
                     ╰────▶ [Data Endpoints]
 ```
 
-## Features
+## Key Features
 
-- Issue FSNAP to issuer account (self-issue) and track issuances
-- Distribute FSNAP to recipient XRPL addresses (with trustline)
-- Prepare merchant redemption payloads for signing
-- Report per-state participation and issuance statuses (CSV export)
+- Issuance, distribution, and merchant redemption prep
+- Trustline tools and XUMM deep‑link signing
+- Back Office: intake, docs upload, AI verify (stub), approve → issue
+- Governance endpoints: flags, multisig, legal hash anchoring
+- CSV/JSON exports and system validation
 
-## Quick Start
+## Quick Start (Windows)
 
-Prereqs:
+Prereqs: Node 18+, PowerShell 5.1+
 
-- Node.js 18+
-- Windows PowerShell 5.1+ (commands below use PowerShell)
+1. Copy env
 
-1) Copy env and configure issuer
+```powershell
+Copy-Item C:\snap-aid-token\server\.env.sample C:\snap-aid-token\server\.env
+```
 
-- Copy `server/.env.sample` to `server/.env`
-- Set `ISSUER_SEED` to an XRPL testnet seed for your issuer wallet
-- Optionally set `ADMIN_API_TOKEN` for admin endpoints
+Edit `server/.env` (do not commit secrets):
 
-1) Install dependencies
+```
+XRPL_WS=wss://s.altnet.rippletest.net:51233
+ISSUER_SEED=your_testnet_seed
+ADMIN_API_TOKEN=your_admin_token
+PORT=4000
 
-- Backend: run from anywhere
+# Optional
+# XUMM_API_KEY=...
+# XUMM_API_SECRET=...
+# OPENAI_API_KEY=...
+# HF_API_TOKEN=...
+```
 
-  ```powershell
-  npm install --prefix "C:\snap-aid-token\server"
-  ```
+2. Install deps
 
-- Frontend: run from anywhere
+```powershell
+npm install --prefix "C:\snap-aid-token\server"
+npm install --prefix "C:\snap-aid-token\web"
+```
 
-  ```powershell
-  npm install --prefix "C:\snap-aid-token\web"
-  ```
+## Environment
+
+- `server/.env` keys: XRPL_WS, ISSUER_SEED, ADMIN_API_TOKEN, PORT, DB_PATH (optional)
+- Optional AI: OPENAI_API_KEY, HF_API_TOKEN
+- Optional XUMM: XUMM_API_KEY/SECRET
 
 ## Run and Verify
 
 Dev servers:
- 
+
 ```powershell
-npm run dev --prefix "C:\snap-aid-token\server"   # Backend on http://localhost:4000
-npm run dev --prefix "C:\snap-aid-token\web"      # Frontend (proxies /api to 4000)
+# Backend
+npm run dev --prefix "C:\snap-aid-token\server"
+
+# Frontend
+npm run dev --prefix "C:\snap-aid-token\web"
+
+# Or in VS Code: Tasks → Dev: both servers
 ```
 
-Health check:
+Health:
 
-```text
-GET http://localhost:4000/health  ->  { ok: true }
+```http
+GET http://localhost:4000/health
+
+HTTP/1.1 200 OK
+{ "ok": true }
 ```
-
-## Configuration
-
-Server `.env` keys:
-
-- `XRPL_WS` (default testnet)
-- `ISSUER_SEED` (issuer wallet seed for testnet)
-- `ADMIN_API_TOKEN` (protects admin endpoints)
-- `DB_PATH` (SQLite file path)
 
 ## API (selected)
 
-- `POST /api/admin/issue` — issue FSNAP (header: `x-admin-token`)
-- `POST /api/family/distribute` — send FSNAP to recipient address
-- `POST /api/merchant/redeem/prepare` — prepare redemption payload
-- `GET /api/data/snap-persons[?format=csv]` — per-state participation
-- `GET /api/state-status[?format=csv]` — issuance progress by state
-- `POST /api/state-status` — update state status (header: `x-admin-token`)
+- `POST /api/admin/issue` — issue GAT (header: `x-admin-token`)
+- `POST /api/family/distribute` — send GAT to recipient
+- `POST /api/merchant/redeem/prepare` — redemption payload
+- `GET /api/data/snap-persons[?format=csv]` — participation data
+- `GET /api/state-status[?format=csv]` — per‑state issuance status
+- `POST /api/state-status` — update status (admin)
+- Governance (admin):
+  - `GET /api/xrpl/issuer/settings`
+  - `POST /api/xrpl/issuer/settings`
+  - `POST /api/xrpl/issuer/signerlist`
+  - `POST /api/xrpl/anchor/legal-hash`
+  - `POST /api/xrpl/issuer/authorize-trustline` (RequireAuth flow)
 
-## Data and Reporting
+## Compliance & Governance
 
-- `web` includes pages for “SNAP by State” and “State Status” (also CSV exports)
-- Admin page includes a quick status updater per state
+- Account flags: RequireAuth, DefaultRipple, DepositAuth; TransferRate=0; Domain set
+- Multisig: SignerList (e.g., 2‑of‑3) for governance
+- Legal hash: anchor policy hash on‑ledger and publish in `.well-known/xrp-ledger.toml`
+- Trustline authorization: authorize after KYC/OFAC approval
 
-## Security Notes
+See docs:
 
-- Recipients and merchants must establish a trustline to the issuer for `FSNAP`
-- Admin actions require `x-admin-token`
-- XRPL testnet only; do not reuse secrets on mainnet
+- `docs/smart-contracts-xrpl.md` — governance and controls
+- `docs/spark-site-config.md` — integration and env mapping
 
-## Development
+## Back Office
 
-Builds from anywhere:
+- Intake → document upload → AI verify (stub) → approve → issue
+- Compliance tab: issuer settings, signer list, legal anchor, audit
 
-```powershell
-npm run build --prefix "C:\snap-aid-token\server"
-npm run build --prefix "C:\snap-aid-token\web"
-```
+## Data & Reporting
+
+- CSV/JSON exports for audit
+- Per‑state participation and issuance status pages
+
+## Security & Privacy
+
+- No PII on‑ledger; trustline + compliance checks server‑side
+- Admin routes require `x-admin-token`
+- Testnet only by default; never reuse secrets on mainnet
+
+## Troubleshooting
+
+- Port 4000 in use: stop the process or set `PORT=4001` in `server/.env`.
+- Dev server exits: ensure `.env` exists and Node ≥ 18.
+- ESLint/Type errors: run `npm run build --prefix server` to pinpoint.
+
+## Docs
+
+- Smart contracts and governance: `docs/smart-contracts-xrpl.md`
+- Spark/site config and endpoints: `docs/spark-site-config.md`
 
 ## License
 
-MIT — for demo purposes only. Review compliance, privacy, and eligibility verification before any real deployment.
+MIT — for demo purposes only. Align compliance and privacy with counsel before production.
